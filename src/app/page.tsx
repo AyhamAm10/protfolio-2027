@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { getContent } from "@/content";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { Hero } from "@/components/hero/Hero";
@@ -36,14 +37,14 @@ export default function Home() {
       <main id="main">
         <span id="top" aria-hidden="true" />
         <Hero content={content.hero} />
-        <WhatIBuild content={content.build} />
-        <SelectedWork content={content.work} />
-        <MoreWork content={content.moreWork} />
-        <Philosophy content={content.philosophy} />
-        <Experience content={content.experience} />
-        <Lab content={content.lab} />
-        <Stack content={content.stack} />
-        <Contact content={content.contact} />
+        <Suspense><WhatIBuild content={content.build} /></Suspense>
+        <Suspense><SelectedWork content={content.work} /></Suspense>
+        <Suspense><MoreWork content={content.moreWork} /></Suspense>
+        <Suspense><Philosophy content={content.philosophy} /></Suspense>
+        <Suspense><Experience content={content.experience} /></Suspense>
+        <Suspense><Lab content={content.lab} /></Suspense>
+        <Suspense><Stack content={content.stack} /></Suspense>
+        <Suspense><Contact content={content.contact} /></Suspense>
       </main>
       <SiteFooter footer={content.contact.footer} />
     </>

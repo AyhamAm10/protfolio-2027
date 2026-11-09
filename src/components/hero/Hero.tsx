@@ -14,7 +14,7 @@ const LABEL_WIDTH = "14.5rem";
 /** A line of text that rises out of an invisible mask (CSS intro). */
 function MaskedLine({ children, delay, className = "" }: { children: React.ReactNode; delay: number; className?: string }) {
   return (
-    <span className={`block overflow-hidden pb-[0.08em] ${className}`}>
+    <span className={`block pb-[0.08em] [overflow-x:visible] [overflow-y:clip] ${className}`}>
       <span className="intro intro-rise block" style={intro(delay, 1.2)}>
         {children}
       </span>
@@ -53,7 +53,7 @@ export function Hero({ content }: { content: HeroContent }) {
         <motion.div style={reduced ? undefined : { y: copyY, opacity: fade }} className="relative z-10 max-w-[40rem]">
           <h1
             id="hero-title"
-            className="font-display text-[clamp(3.75rem,17vw,6.5rem)] leading-[0.86] font-normal tracking-[-0.025em] text-bone lg:text-[clamp(5rem,9vw,10rem)]"
+            className="font-display text-[clamp(3.75rem,17vw,6.5rem)] leading-[0.86] font-normal tracking-[-0.025em] text-bone lg:text-[clamp(4.5rem,7.6vw,9rem)]"
           >
             <MaskedLine delay={heroTimeline.name}>{first}</MaskedLine>
             <MaskedLine delay={heroTimeline.name + 0.12} className="pl-[0.62em]">
