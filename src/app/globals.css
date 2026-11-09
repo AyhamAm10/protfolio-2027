@@ -1,0 +1,166 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+   Oxblood Noir: design tokens
+   Contrast notes (WCAG, on --ink):
+     bone 15.8 · steel 6.6 · amber 7.4  -> safe for text
+     claret 3.0 · oxblood 1.9           -> never as text colour;
+     use as fills behind bone text (8.2 / 5.3) or as light/lines.
+   ------------------------------------------------------------------ */
+:root {
+  --ink: #0e0b0a;
+  --espresso: #1a1412;
+  --umber: #2a211d;
+  --oxblood: #7a1f2b;
+  --claret: #a3364a;
+  --amber: #c9945b;
+  --bone: #ede6dc;
+  --steel: #8e979c;
+
+  --ease-cine: cubic-bezier(0.7, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --gutter: clamp(1rem, 4vw, 3.5rem);
+}
+
+@theme inline {
+  --color-ink: var(--ink);
+  --color-espresso: var(--espresso);
+  --color-umber: var(--umber);
+  --color-oxblood: var(--oxblood);
+  --color-claret: var(--claret);
+  --color-amber: var(--amber);
+  --color-bone: var(--bone);
+  --color-steel: var(--steel);
+
+  --font-display: var(--font-bodoni), "Didot", "Bodoni 72", serif;
+  --font-sans: var(--font-schibsted), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+
+  --ease-cine: cubic-bezier(0.7, 0, 0.2, 1);
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+  background: var(--ink);
+  color: var(--bone);
+  color-scheme: dark;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--ink);
+  font-family: var(--font-sans);
+  font-feature-settings: "ss01", "kern";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+::selection {
+  background: var(--oxblood);
+  color: var(--bone);
+}
+
+:focus-visible {
+  outline: 1.5px solid var(--amber);
+  outline-offset: 4px;
+}
+
+/* Film grain: one fixed layer for the whole page. */
+.grain {
+  pointer-events: none;
+  position: fixed;
+  inset: -50%;
+  z-index: 60;
+  opacity: 0.05;
+  background-image: url("/images/grain.png");
+  background-size: 160px 160px;
+  animation: grain 0.9s steps(5) infinite;
+}
+
+@keyframes grain {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-3%, 2%); }
+  40% { transform: translate(2%, -4%); }
+  60% { transform: translate(-4%, -1%); }
+  80% { transform: translate(3%, 3%); }
+  100% { transform: translate(0, 0); }
+}
+
+@keyframes breathe {
+  0%, 100% { opacity: var(--o-min, 0.25); transform: scale(1); }
+  50% { opacity: var(--o-max, 0.45); transform: scale(1.06); }
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+@keyframes scroll-cue {
+  0% { transform: scaleY(0); transform-origin: top; }
+  45% { transform: scaleY(1); transform-origin: top; }
+  55% { transform: scaleY(1); transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; }
+}
+
+/* Phones and touch devices: keep the light and grain still. Continuous
+   animation of large blurred layers costs too much main-thread time there. */
+@media (max-width: 1023px), (pointer: coarse) {
+  .grain,
+  [data-breathe] {
+    animation: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .grain,
+  [data-breathe],
+  [data-pulse],
+  [data-scroll-cue] {
+    animation: none !important;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Hero intro, in CSS. The load sequence runs on the compositor with no
+   per-frame JavaScript, so it stays smooth on slow phones and starts
+   before hydration. `both` holds each element hidden until its delay.
+   ------------------------------------------------------------------ */
+@keyframes intro-rise { from { transform: translateY(105%); } to { transform: none; } }
+@keyframes intro-clip { from { clip-path: inset(100% 0 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes intro-settle { from { transform: scale(1.14); } to { transform: none; } }
+@keyframes intro-draw-x { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes intro-draw-y { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+@keyframes intro-fade-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes intro-fade-left { from { opacity: 0; transform: translateX(-8px); } to { opacity: 1; transform: none; } }
+@keyframes intro-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes intro-pop { from { transform: scale(0); } to { transform: scale(1); } }
+
+.intro {
+  animation-duration: var(--d, 1s);
+  animation-delay: var(--delay, 0s);
+  animation-timing-function: var(--ease-cine);
+  animation-fill-mode: both;
+}
+.intro-out { animation-timing-function: var(--ease-out); }
+.intro-rise { animation-name: intro-rise; }
+.intro-clip { animation-name: intro-clip; }
+.intro-settle { animation-name: intro-settle; }
+.intro-draw-x { animation-name: intro-draw-x; }
+.intro-draw-y { animation-name: intro-draw-y; }
+.intro-fade-up { animation-name: intro-fade-up; }
+.intro-fade-left { animation-name: intro-fade-left; }
+.intro-fade { animation-name: intro-fade; }
+.intro-pop { animation-name: intro-pop; }
+
+@media (prefers-reduced-motion: reduce) {
+  .intro {
+    animation: none !important;
+  }
+}
